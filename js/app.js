@@ -216,7 +216,13 @@ function update() {
     // .text('<b>hola</b>');
 
     link.append("title")
-    .text(function(d) { return "source: " + d.source + "\n" + "target: " + d.target + "\n" + "type: " + d.type_tw + "\n"});
+    .text(function(d) { 
+        //console.log( d.source == "[object Object]" );//=="object Object"  typeof({id:"1",source:{id:"10"}})
+        if (d.source == "[object Object]") {
+            return "source: " + d.source.id + "\n" + "target: " + d.target.id + "\n" + "type: " + d.type_tw ;
+        } ;   
+        return "source: " + d.source + "\n" + "target: " + d.target + "\n" + "type: " + d.type_tw ;
+    });
     ///////////////////////////////////////////////////////////////
     //	update simulation nodes, links, and alpha
 
