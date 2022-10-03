@@ -1,6 +1,5 @@
 /////// READING THE JSON FILE
 //Lasso_1562457217806528514_nolimpio.json
-//
 d3.json("LASSO_1563573550027460608_nolimpio.json").then(function(graph){
 
     var nodeByID = {};
@@ -10,9 +9,16 @@ d3.json("LASSO_1563573550027460608_nolimpio.json").then(function(graph){
         //n.filtered = false; 
         n.time = new Date(n.time);
         dataArray.push(n.time);
+
+
+        dic_adj[n.id] = [];
+        //console.log(dic_adj); 
     });
-  
-    
+    //console.log(dic_adj); 
+        // Driver method
+    //Graph(graph.nodes.length);
+    //console.log(graph.nodes.length);
+
      // to save the times on links
     c=0;
     graph.links.forEach(function(l) {
@@ -22,6 +28,10 @@ d3.json("LASSO_1563573550027460608_nolimpio.json").then(function(graph){
         //l.sourceId = nodeByID[l.source].id;//.toString();//in each link is adding the surce and target level
         //l.targetId = nodeByID[l.target].id;//.toString();
         //l.filtered = false;
+
+        //console.log(l.source);
+        //console.log(Number(l.source)); //BigInt sale con n al final
+        addEdge(l.source, l.target);
     });
 
 
@@ -43,7 +53,7 @@ d3.json("LASSO_1563573550027460608_nolimpio.json").then(function(graph){
     
     // Store keeps all  nodes and links
     grafo = $.extend(true, {}, graph); //OJO ************************************************************************
-    
+    //console.log(grafo);
     nodos=[...grafo.nodes];
     enlaces=[...grafo.links];
 
@@ -71,10 +81,89 @@ d3.json("LASSO_1563573550027460608_nolimpio.json").then(function(graph){
       .ticks(1000)
       .filter(time => nodos.some(d => contains(d, time))); // creating a scale with 1000 ticks containng  the times of the dataset
   */
- return 1;
+ //return 1;
      // doUpdate(); // this is for the radius slicer  and create the filter
   });//.then(r=>createarrows()).then(r=>createTimeSlider());//.then(createTimeSlider());
  /////// END READING THE JSON FILE
+
+
+
+ // Javascript program to check if there is exist a path between two vertices
+// of a graph.
+// Function to add an edge into the graph
+function addEdge(v,w)
+{
+    //adj[v].push(w);
+   dic_adj[v].push(w);
+    //console.log(dic_adj); 
+    
+}
+ 
+//let dd ={"1":[]};
+//dd["1"].push(10);
+//dd["2"]=[];
+//dd["3"]=[];
+//console.log(dd);
+
+// prints BFS traversal from a given source s
+function isReachable(s,d)
+{
+    //let temp;
+    //console.log(grafo);
+        // Mark all the vertices as not visited(By default set
+        // as false)
+        //let visited = new Array(V);
+        let dic_visited = {};
+        // for(let i = 0; i < V; i++){
+            //visited[i] = false;
+        //    dic_visited[i] = false;}
+
+        grafo.nodes.forEach(function(n) {
+            dic_visited[n.id] = false;
+        });
+
+             
+        // Create a queue for BFS
+        //let queue = [];
+
+        // Create a stack for DFS
+        let stack = [];
+  
+        // Mark the current node as visited and enqueue it
+        //visited[s] = true;
+        dic_visited[s] = true;
+        stack.push(s);
+        let path =[];
+        while (stack.length != 0)
+        {
+            // Dequeue a vertex from queue and print it
+            //n = queue.shift();
+            n = stack.pop();
+            path.push(n); 
+            if(n == d){
+                //console.log(path);
+                //console.log(path);
+                return (path);
+            }
+            if(dic_adj[n].length == 0){
+                path =[];
+            }
+            for(let i = 0; i < dic_adj[n].length; i++)
+            {
+                if (dic_visited[dic_adj[n][i]] == false)
+                {
+                    stack.push(dic_adj[n][i]);
+                    dic_visited[dic_adj[n][i]] = true;
+                }
+            }
+             
+        }
+  
+        // If BFS is complete without visited d
+        return ([]);
+}
+
+ 
 
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
@@ -149,6 +238,7 @@ function filter_time(timeslider) {
     
     nodos = grafo.nodes.filter((d) => contains(d, timeslider));
     enlaces = grafo.links.filter((d) => contains(d, timeslider));
+    //console.log(grafo);
     //nodos  
     //enlaces
    
@@ -288,15 +378,46 @@ function getNeighbors(node) {
   }
 
   function fade(opacity,d) {
-
+    var path =isReachable('1563573550027460608',d.id); //1563537043665219586 1563622459772911619
+    path.push('1563573550027460608')
+    console.log(path.length);
     var neigs = getNeighbors(d);
-   
-    node.style('stroke-opacity', function (o) {
-      
+    //console.log(neigs);
+
+    if (path.length != 1){
+        node.style('stroke-opacity', function (o) {
+            const thisOpacity = path.includes(o.id) ? 1 : opacity;
+            this.setAttribute('fill-opacity', thisOpacity);
+            return thisOpacity;});
+
+        //link.style('stroke-opacity',  o => nlinkopacity(o,path,opacity));
+        link.style('stroke-opacity', o => ( path.includes(o.source.id) &&  path.includes(o.target.id) ? 1 : opacity));
+
+    } else{
+        node.style('stroke-opacity', function (o) {
+            const thisOpacity = neigs.includes(o.id) ? 1 : opacity;
+            this.setAttribute('fill-opacity', thisOpacity);
+            return thisOpacity;});
+        link.style('stroke-opacity', o => (o.source.id === d.id || o.target.id === d.id ? 1 : opacity));
+    }
+
+   /* node.style('stroke-opacity', function (o) {
       const thisOpacity = neigs.includes(o.id) ? 1 : opacity;
       this.setAttribute('fill-opacity', thisOpacity);
       return thisOpacity;})
-    link.style('stroke-opacity', o => (o.source.id === d.id || o.target.id === d.id ? 1 : opacity));
+    link.style('stroke-opacity', o => (o.source.id === d.id || o.target.id === d.id ? 1 : opacity));*/
+  } // END FADE
+
+  function nlinkopacity(o,path,opacity){
+    path.forEach(function(el){
+        //console.log(o.source.id);
+        if (o.source.id === el || o.target.id === el){
+            //console.log("ingresa");
+            return 1;
+        } else {
+        return opacity;
+    }
+    });
   }
 
 function dragstarted(event) {
