@@ -17,6 +17,7 @@ var radiusnode=5;
 //	data stores
 var grafo, store;
 var nodos, enlaces;
+var dic_adj={};
 
 var times;
 var minglobal; //min datetime in the dataset
