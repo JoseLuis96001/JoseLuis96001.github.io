@@ -10,7 +10,7 @@ arrowPoints = [[0, 0], [0, 10], [10, 5]];
 
 var svg2 = d3.select("#leg").append("svg")
     .attr("width", 300)
-    .attr("height", 90);//70
+    .attr("height", 110);//70
   yleg = 
     // Reply Arrow
     svg2
@@ -82,6 +82,11 @@ var svg2 = d3.select("#leg").append("svg")
     .attr('fill', 'none');
 
     svg2.append("text").attr("x", 150).attr("y", 60).text("Quote").style("font-size", "15px").attr("alignment-baseline","middle")
+
+    // NODE
+    svg2.append("circle").attr("cx",115).attr("cy",90).attr("r", 7).style("fill", highColor)
+
+    svg2.append("text").attr("x", 150).attr("y", 90).text("Tweet").style("font-size", "15px").attr("alignment-baseline","middle")
 
     return 2;
 
