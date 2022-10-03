@@ -50,11 +50,11 @@
 					  <output id="collide_radiusSliderOutput">5</output>
 					  <input type="range" min="0" max="100" value="5" step="1" oninput="d3.select('#collide_radiusSliderOutput').text(value); forceProperties.collide.radius=value; updateAll();">
 					</label>
-					<label title="Higher values increase rigidity of the nodes (WARNING: high values are computationally expensive)">
+					<!--<label title="Higher values increase rigidity of the nodes (WARNING: high values are computationally expensive)">
 					  iterations
 					  <output id="collide_iterationsSliderOutput">1</output>
 					  <input type="range" min="1" max="10" value="1" step="1" oninput="d3.select('#collide_iterationsSliderOutput').text(value); forceProperties.collide.iterations=value; updateAll();">
-					</label>
+					</label>-->
 				  </div>	
 				
 
@@ -65,11 +65,11 @@
 					  <output id="link_DistanceSliderOutput">30</output>
 					  <input type="range" min="0" max="100" value="30" step="1" oninput="d3.select('#link_DistanceSliderOutput').text(value); forceProperties.link.distance=value; updateAll();">
 					</label>
-					<label title="Higher values increase rigidity of the links (WARNING: high values are computationally expensive)">
+					<!--<label title="Higher values increase rigidity of the links (WARNING: high values are computationally expensive)">
 					  iterations
 					  <output id="link_IterationsSliderOutput">1</output>
 					  <input type="range" min="1" max="10" value="1" step="1" oninput="d3.select('#link_IterationsSliderOutput').text(value); forceProperties.link.iterations=value; updateAll();">
-					</label>
+					</label>-->
 				  </div>
 
 
@@ -127,10 +127,7 @@
 				  
 			</div>
 
-			<div class="row">
 
-
-			</div>
 
 		</div>
 	
