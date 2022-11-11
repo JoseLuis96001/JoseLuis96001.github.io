@@ -1,18 +1,5 @@
 //document.getElementById("customRange1").max = times.length;
 var radiusnode=5;
-/*var slider = document.getElementById("customRange1");
-    var output = document.getElementById("demo");
-    output.innerHTML = slider.value;
-    
-    slider.oninput = function() {
-          output.innerHTML = this.value;
-          console.log(typeof(parseInt(this.value)));
-
-          //doUpdate();
-          radiusnode = parseInt(this.value); 
-          //simulation.restart();
-          update();
-    };*/
 
 //	data stores
 var grafo, store;

@@ -1,6 +1,9 @@
 /////// READING THE JSON FILE
 //Lasso_1562457217806528514_nolimpio.json
-d3.json("LASSO_1563573550027460608_nolimpio.json").then(function(graph){
+//LASSO_1563573550027460608_nolimpio.json
+var origin = '1562457217806528514';
+
+d3.json("Lasso_1562457217806528514_nolimpio.json").then(function(graph){
 
     var nodeByID = {};
   
@@ -14,35 +17,19 @@ d3.json("LASSO_1563573550027460608_nolimpio.json").then(function(graph){
         dic_adj[n.id] = [];
         //console.log(dic_adj); 
     });
-    //console.log(dic_adj); 
-        // Driver method
-    //Graph(graph.nodes.length);
-    //console.log(graph.nodes.length);
+    
 
-     // to save the times on links
+
+     // save the times on links
     c=0;
     graph.links.forEach(function(l) {
         l.id = c;
         c = c+1;
         l.time =  new Date(nodeByID[l.target].time);// the time is added to the link to use this with the time filter radius slider
-        //l.sourceId = nodeByID[l.source].id;//.toString();//in each link is adding the surce and target level
-        //l.targetId = nodeByID[l.target].id;//.toString();
-        //l.filtered = false;
 
-        //console.log(l.source);
-        //console.log(Number(l.source)); //BigInt sale con n al final
         addEdge(l.source, l.target);
     });
-
-
-    //////FOR time filtering
-  
-//    nodos.forEach( (ob) => { //era links
-//        ob.time = new Date(ob.time); // saving the dates in a date format 
-//
-//            dataArray.push(ob.time);
-//
-//    });
+   
 
     ///////////////////////////////////////////////////////////
     minglobal = d3.min(dataArray);
@@ -52,38 +39,22 @@ d3.json("LASSO_1563573550027460608_nolimpio.json").then(function(graph){
   
     
     // Store keeps all  nodes and links
-    grafo = $.extend(true, {}, graph); //OJO ************************************************************************
+    grafo = $.extend(true, {}, graph); 
     //console.log(grafo);
     nodos=[...grafo.nodes];
     enlaces=[...grafo.links];
 
-    
-    //store = $.extend(true, {}, graph); // store its a copy of graph
-    
-    // This is the update function (and create graph plot)
-    //update();
-  
- 
-    
+        
       // two different ways TO create scales for node colors
       ramp = d3.scaleLinear().domain([minglobal,maxglobal]).range([highColor,lowColor]); // invertido el color de los nodos
-      // var colorScale2 = d3.scaleSequential(d3.interpolateViridis).domain([minVal,maxVal]);
-      //var colorScale2 = d3.scaleSequential([highColor,lowColor]).domain([minVal,maxVal]);
+
       addhcolorbar("#bar", ramp); //
-      //addcolorbar("#bar", timescale);
-      //////////////////////////////////////////////////////////
-      
+
+
       createarrows();
       createTimeSlider(minglobal,maxglobal);
-      //the lines below were used in the first version of time filter
-      /*times = d3.scaleTime()
-      .domain([minVal, maxVal])
-      .ticks(1000)
-      .filter(time => nodos.some(d => contains(d, time))); // creating a scale with 1000 ticks containng  the times of the dataset
-  */
- //return 1;
-     // doUpdate(); // this is for the radius slicer  and create the filter
-  });//.then(r=>createarrows()).then(r=>createTimeSlider());//.then(createTimeSlider());
+
+  });
  /////// END READING THE JSON FILE
 
 
@@ -93,73 +64,83 @@ d3.json("LASSO_1563573550027460608_nolimpio.json").then(function(graph){
 // Function to add an edge into the graph
 function addEdge(v,w)
 {
-    //adj[v].push(w);
+    
    dic_adj[v].push(w);
-    //console.log(dic_adj); 
+    
     
 }
  
-//let dd ={"1":[]};
-//dd["1"].push(10);
-//dd["2"]=[];
-//dd["3"]=[];
-//console.log(dd);
 
-// prints BFS traversal from a given source s
+function cleanPath(path){
+    A = [...path];
+    var real_path = [];
+    var el = A.pop();
+    real_path.push(el);
+    var count = 0;
+    while (A.length != 0)
+    {
+    el = A.pop();
+    
+    for(let i = 0; i < dic_adj[el].length; i++)
+            {
+
+                if (dic_adj[el][i] == real_path[count])
+                {
+                    count = count + 1 ;
+                    real_path.push(el);
+                };
+            };   
+
+        };
+    return real_path;
+
+}
+
+
+
 function isReachable(s,d)
 {
-    //let temp;
-    //console.log(grafo);
-        // Mark all the vertices as not visited(By default set
-        // as false)
-        //let visited = new Array(V);
+ 
         let dic_visited = {};
-        // for(let i = 0; i < V; i++){
-            //visited[i] = false;
-        //    dic_visited[i] = false;}
-
+    
         grafo.nodes.forEach(function(n) {
             dic_visited[n.id] = false;
         });
 
-             
-        // Create a queue for BFS
-        //let queue = [];
 
         // Create a stack for DFS
         let stack = [];
   
         // Mark the current node as visited and enqueue it
-        //visited[s] = true;
         dic_visited[s] = true;
         stack.push(s);
         let path =[];
         while (stack.length != 0)
         {
             // Dequeue a vertex from queue and print it
-            //n = queue.shift();
+
             n = stack.pop();
             path.push(n); 
+            
             if(n == d){
-                //console.log(path);
-                //console.log(path);
-                return (path);
+
+                rpath = cleanPath(path);
+                
+                return (rpath);
             }
-            if(dic_adj[n].length == 0){
-                path =[];
-            }
+
             for(let i = 0; i < dic_adj[n].length; i++)
             {
                 if (dic_visited[dic_adj[n][i]] == false)
                 {
                     stack.push(dic_adj[n][i]);
+                    //path.push(dic_adj[n][i]);
                     dic_visited[dic_adj[n][i]] = true;
                 }
-            }
-             
+            }             
         }
   
-        // If BFS is complete without visited d
+        // If DFS is complete without visited d
         return ([]);
 }
 
@@ -172,7 +153,7 @@ var svg = d3.select("svg"),
 
 
 var g = svg.append("g");
-    //.attr("class", "everything"); /// no uso al parecer
+    
 
 var link = g.append("g").selectAll(".line"),
     node = g.append("g").selectAll(".circle");
@@ -181,12 +162,8 @@ var link = g.append("g").selectAll(".line"),
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }))
     .force("charge", d3.forceManyBody().strength(-30))//-30 is the default
-
-    //.force("x", d3.forceX())// no expansion  in disjoint graphs
-    //.force("y", d3.forceY())// no expansion
-    //.on("tick", ticked)//  // esto le quito
     .force("center", d3.forceCenter(width / 2, height / 2)); //con este se centra y todos los nodos se ex[anden]
-    //.force('collide',d3.forceCollide().radius(30).iterations(2));;
+    
 
 
 /////////add zoom capabilities 
@@ -196,10 +173,6 @@ var simulation = d3.forceSimulation()
 
     zoom_handler(svg); 
 
-    //Zoom functions 
-    /*function zoom_actions(e){
-        g.attr("transform", e.transform)
-    };*/
 
     function zoom_actions({transform}){
         g.attr("transform", transform)
@@ -214,18 +187,7 @@ var simulation = d3.forceSimulation()
 
 //
 let i = 0;
-//OJO AL PARECER TENGO REPETIDOS VARIOS ENLACES
-////////// BEGIN DO UPDATE
-//function doUpdate() {
-//  
-//  if (i >= times.length) {
-//    i = 0;
-//  }
-//  
-//  filter_time(times[i++]); // times is an array so with i i will navegate within these values
-//  //setTimeout(doUpdate, 100);//500 this is to run the function every so often (MAYBE useful for the play button)
-//}
-////////// END DO UPDATE
+
 
 //For time filtering
 ////////// BEGIN contains function
@@ -238,9 +200,7 @@ function filter_time(timeslider) {
     
     nodos = grafo.nodes.filter((d) => contains(d, timeslider));
     enlaces = grafo.links.filter((d) => contains(d, timeslider));
-    //console.log(grafo);
-    //nodos  
-    //enlaces
+
    
     // filtering the do an update
     update();
@@ -307,17 +267,14 @@ function update() {
 
     link.append("title")
     .text(function(d) { 
-        //console.log( d.source == "[object Object]" );//=="object Object"  typeof({id:"1",source:{id:"10"}})
+        
         if (d.source == "[object Object]") {
             return "source: " + d.source.id + "\n" + "target: " + d.target.id + "\n" + "type: " + d.type_tw ;
         } ;   
         return "source: " + d.source + "\n" + "target: " + d.target + "\n" + "type: " + d.type_tw ;
     });
     ///////////////////////////////////////////////////////////////
-    //	update simulation nodes, links, and alpha
 
-    //nodoscp = [...nodos];
-    //enlacescp = [...enlaces];
 
     simulation
     .nodes(nodos) // grafo.nodes //nodos //con grafo.nodos conservan la posicion como si tuviera ya el grafo completo --ojo que con eso tambien debo poner.id en source y target
@@ -327,27 +284,6 @@ function update() {
     .links(enlaces); // grafo.links  //enlaces
 
     simulation.alpha(1).alphaTarget(0).restart();
-    ////////////////////////////////////////////////////////
-//aqui antes node color
-/////////////////////////////////////////////////////////////////
-/// antes lo de zoom estuvo aqui
-
-///antes lo del fade y get neig estuvo aqui
-
-/////////////////////////////////////////////////////
-
-
-   /* function ticked() {
-        link
-            .attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; });
-        node
-            .attr("cx", function(d) { return d.x; })
-            .attr("cy", function(d) { return d.y; });
-    };*/
-
 } 
   /////////////// END UPDATE
 
@@ -378,19 +314,18 @@ function getNeighbors(node) {
   }
 
   function fade(opacity,d) {
-    var path =isReachable('1563573550027460608',d.id); //1563537043665219586 1563622459772911619
-    path.push('1563573550027460608')
-    console.log(path.length);
+    var path =isReachable(origin,d.id); 
+    
     var neigs = getNeighbors(d);
-    //console.log(neigs);
+    
 
-    if (path.length != 1){
+    if (path.length != 0){
         node.style('stroke-opacity', function (o) {
             const thisOpacity = path.includes(o.id) ? 1 : opacity;
             this.setAttribute('fill-opacity', thisOpacity);
             return thisOpacity;});
 
-        //link.style('stroke-opacity',  o => nlinkopacity(o,path,opacity));
+        
         link.style('stroke-opacity', o => ( path.includes(o.source.id) &&  path.includes(o.target.id) ? 1 : opacity));
 
     } else{
@@ -401,18 +336,14 @@ function getNeighbors(node) {
         link.style('stroke-opacity', o => (o.source.id === d.id || o.target.id === d.id ? 1 : opacity));
     }
 
-   /* node.style('stroke-opacity', function (o) {
-      const thisOpacity = neigs.includes(o.id) ? 1 : opacity;
-      this.setAttribute('fill-opacity', thisOpacity);
-      return thisOpacity;})
-    link.style('stroke-opacity', o => (o.source.id === d.id || o.target.id === d.id ? 1 : opacity));*/
+
   } // END FADE
 
   function nlinkopacity(o,path,opacity){
     path.forEach(function(el){
-        //console.log(o.source.id);
+        
         if (o.source.id === el || o.target.id === el){
-            //console.log("ingresa");
+            
             return 1;
         } else {
         return opacity;
@@ -437,18 +368,8 @@ function dragended(event) {
     event.subject.fy = null;
 }
 
- /*function ticked() { //ORIGINAL
-    link
-        .attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-    node
-        .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; });
-} //esto le quito redunda
-*/
-function ticked() { //no sale al abrir a aplicacions
+
+function ticked() { 
     link
         .attr("x1", function(d) { return translation[0] + scaleFactor*d.source.x; })
         .attr("y1", function(d) { return translation[1] + scaleFactor*d.source.y; })
@@ -531,10 +452,6 @@ function complete() {
     link.append("title")
     .text(function(d) { return "source: " + d.source + "\n" + "target: " + d.target + "\n" + "type: " + d.type_tw + "\n" + "graph_id: " + d.graphid; });
     ///////////////////////////////////////////////////////////////
-    //	update simulation nodes, links, and alpha
-
-    //nodoscp = [...nodos];
-    //enlacescp = [...enlaces];
 
     simulation
     .nodes(grafo.nodes) // grafo.nodes //nodos //con grafo.nodos conservan la posicion como si tuviera ya el grafo completo --ojo que con eso tambien debo poner.id en source y target
@@ -547,10 +464,6 @@ function complete() {
 } 
 
 function updateForces() {
-    // get each force by name and update the properties
-    /*simulation.force("center")
-        .x(width * forceProperties.center.x)
-        .y(height * forceProperties.center.y);*/
     simulation.force("charge",d3.forceManyBody()
         .strength(forceProperties.charge.strength * forceProperties.charge.enabled)
         .distanceMin(forceProperties.charge.distanceMin)
@@ -559,12 +472,6 @@ function updateForces() {
     .strength(forceProperties.collide.strength * forceProperties.collide.enabled)
     .radius(forceProperties.collide.radius)
     .iterations(forceProperties.collide.iterations));
-   /*  simulation.force("forceX")
-        .strength(forceProperties.forceX.strength * forceProperties.forceX.enabled)
-        .x(width * forceProperties.forceX.x);
-    simulation.force("forceY")
-        .strength(forceProperties.forceY.strength * forceProperties.forceY.enabled)
-        .y(height * forceProperties.forceY.y); */
     simulation.force("link",d3.forceLink()
         .id(function(d) {return d.id;})
         .distance(forceProperties.link.distance)
@@ -579,11 +486,9 @@ function updateForces() {
 function updateDisplay() {
     node
         .attr("r", forceProperties.collide.radius)
-        //.attr("stroke", forceProperties.charge.strength > 0 ? "blue" : "red")
-        //.attr("stroke-width", forceProperties.charge.enabled==false ? 0 : Math.abs(forceProperties.charge.strength)/15);
         ;
     link
-    //    .attr("stroke-width", forceProperties.link.enabled ? 1 : .5)
+    
         .attr("opacity", forceProperties.link.enabled ? 1 : 0);
 }
 // convenience function to update everything (run after UI input)
