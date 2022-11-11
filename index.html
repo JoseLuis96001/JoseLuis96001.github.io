@@ -24,23 +24,15 @@
 			<h2 class="text-center" >Tweet Vis</h2>
 			</div>
 			
-			<!--<div class="row">
-				<button type="button" class="btn btn-secondary" id="clearFilt" >Complete Graph</button>-->
-				<!--<button type="button" class="btn btn-secondary" id="deletebtn" >Increment</button>-->
-			<!--</div>-->
 
 			<div class="row">
 				
-				<!-- inicio range slider -->
-				<!-- <label form="customRange1" class="form-label">Node Radius</label> -->
-				<!-- <input type="range" class="form-range" min="1" max="10" value="5" id="customRange1"> -->
-				<!-- fin range slider -->
-				<!-- <p>Value: <span id="demo"></span></p> -->
 				
 				<div class="controls">
 				<div class="force">
 					<p><label><input type="checkbox" checked onchange="forceProperties.collide.enabled = this.checked; updateAll();"> collide</label> Prevents nodes from overlapping</p>
 					<label>
+
 					  strength
 					  <output id="collide_StrengthSliderOutput">.7</output>
 					  <input type="range" min="0" max="2" value=".7" step=".1" oninput="d3.select('#collide_StrengthSliderOutput').text(value); forceProperties.collide.strength=value; updateAll();">
@@ -50,26 +42,19 @@
 					  <output id="collide_radiusSliderOutput">5</output>
 					  <input type="range" min="0" max="100" value="5" step="1" oninput="d3.select('#collide_radiusSliderOutput').text(value); forceProperties.collide.radius=value; updateAll();">
 					</label>
-					<!--<label title="Higher values increase rigidity of the nodes (WARNING: high values are computationally expensive)">
-					  iterations
-					  <output id="collide_iterationsSliderOutput">1</output>
-					  <input type="range" min="1" max="10" value="1" step="1" oninput="d3.select('#collide_iterationsSliderOutput').text(value); forceProperties.collide.iterations=value; updateAll();">
-					</label>-->
+
 				  </div>	
 				
 
 				  <div class="force">
+
 					<p><label><input type="checkbox" checked onchange="forceProperties.link.enabled = this.checked; updateAll();"> link</label> Sets link length</p>
 					<label title="The force will push/pull nodes to make links this long">
 					  distance
 					  <output id="link_DistanceSliderOutput">30</output>
 					  <input type="range" min="0" max="100" value="30" step="1" oninput="d3.select('#link_DistanceSliderOutput').text(value); forceProperties.link.distance=value; updateAll();">
 					</label>
-					<!--<label title="Higher values increase rigidity of the links (WARNING: high values are computationally expensive)">
-					  iterations
-					  <output id="link_IterationsSliderOutput">1</output>
-					  <input type="range" min="1" max="10" value="1" step="1" oninput="d3.select('#link_IterationsSliderOutput').text(value); forceProperties.link.iterations=value; updateAll();">
-					</label>-->
+
 				  </div>
 
 
@@ -94,16 +79,14 @@
 
 				</div>
 				<div id="leg">
-					<!-- <svg id="bar">
-					</svg>-->
+
 				</div> 
 
 			</div>
 			
 			<div class="row">
 				<div id="bar">
-					<!-- <svg id="bar">
-					</svg>-->
+
 				</div> 
 			</div>
 
@@ -114,18 +97,7 @@
 			</div>
 
 			<div class="row">
-				<!-- <form style="font: 12px var(--sans-serif); font-variant-numeric: tabular-nums; display: flex; height: 33px; align-items: center;">
-					<button name="b" type="button" style="margin-right: 0.4em; width: 5em;">Play</button>
-					<label style="display: flex; align-items: center;">
-					  <input name="i" type="range" min="0" max="5" value="0" step="1" style="width: 180px;">
-					  <output name="o" style="margin-left: 0.4em;"></output>
-					</label>
-				  </form>-->
 
-				  <!-- <div id="vis">
-					<button id="play-button">Play</button>
-				  </div>-->
-				  
 			</div>
 
 
@@ -157,18 +129,6 @@
 <script src="js\app.js"></script>
 <script src="js\arrowslegend.js"></script>
 <script src="js\slider.js"></script>
-
-
-
-<script>
-$("#clearFilt").click( function() {
-    //restore();
-    //update();
-	complete();
-});
-	
-
-</script>
 
 
 <!-- Bootstrap JS Bundle with Popper -->
